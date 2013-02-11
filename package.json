@@ -1,0 +1,24 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "description": "browser based mobile openstreetmap editor",
+  "private": false,
+  "author": {
+      "name": "Stefan W <stefan@navimont.com>",
+      "email": "stefan@navimont.com"
+  },
+  "keywords": ["openstreetmap", "editor", "mobile", "browser"],
+  "scripts": {
+    "start": "node server"
+  },
+  "repository" :
+    { "type" : "git",
+     "url" : "https://github.com/navimont/osmogon.git"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "nodeunit": ">=0.7.0",
+    "jade": "*",
+    "stylus": "*"
+  }
+}

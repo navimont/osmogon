@@ -12,7 +12,7 @@ var util = require("util");
 var assert = require('assert');
 
 var Settings = require('./lib/util/settings').getSettings();
-var Parser = require("./lib/parser/osm-parser");
+var Parser = require("./lib/parser/osm-parser").OsmParser;
 var MongoOsm = require('./lib/mongo/mongo-connect');
 var Logger = require("./lib/util/logger");
 

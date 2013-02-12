@@ -9,6 +9,8 @@ var BBox = require('../lib/geometry/bbox').BBox;
 var OsmParser = require('../lib/parser/osm-parser').OsmParser;
 var TestInterface = require('../lib/parser/osm-parser').TestInterface;
 
+var Node = require("../lib/mongo/node-mongo").Node;
+
 
 function MyStream() {
     events.EventEmitter.call(this);
@@ -53,12 +55,11 @@ var WayDb = {
     }
 }
 
-var NodeDb = {
-    storeNode: function(node, decrDBQueue) {
-        nodes++;
-        decrDBQueue();
-    }
+Node.prototype.store = function(decrDBQueue) {
+    nodes++;
+    decrDBQueue();
 }
+
 
 var RelationDb = {
     storeRelation: function(relation, decrDBQueue) {
@@ -71,7 +72,7 @@ var RelationDb = {
 exports.mockedDB = {
     setUp: function(callback) {
         TestInterface.injectWayDB(WayDb);
-        TestInterface.injectNodeDB(NodeDb);
+        TestInterface.injectNode(Node);
         TestInterface.injectRelationDB(RelationDb);
         TestInterface.injectNodeTmpDB(NodeTmpDb);
         this.heartbeat = function(state) {};

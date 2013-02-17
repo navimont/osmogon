@@ -146,7 +146,7 @@ Osmdata.prototype.load = function(query) {
     if (!viewport) {
         throw "Could not get viewport from osmogon";
     }
-    var locator = "/osm/viewport/"+JSON.stringify(viewport);
+    var locator = "/osm?minlon="+viewport[0][0]+"&minlat="+viewport[0][1]+"&maxlon="+viewport[1][0]+"&maxlat="viewport[1][1]
     this.loadRequest(locator,query);
     return this;
 }
@@ -159,7 +159,7 @@ Osmdata.prototype.loadRequest = function(locator, query) {
         context.loadCbHandler.call(context, data);
     }
 
-    var url = locator+"/"+JSON.stringify(query);
+    var url = locator+"&query="+JSON.stringify(query);
     d3.json(url, cb_wrapper);
     return this;
 }

@@ -1,2 +1,18 @@
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script type='text/javascript' src='/javascripts/osmogon.js'></script>
+    <script type='text/javascript' src='/javascripts/topo40.js'></script>
+    <script type='text/javascript' src='/javascripts/d3/d3.v3.js'></script>
+  </head>
+  <body>
+    <h1>Osmogon</h1>
+    <p>In-Browser Openstreetmap Node Editor</p>
+    <div id='map' width='600' height='800'></div>
+    <script type='text/javascript'>
+      render();
+    </script>
+  </body>
+</html>

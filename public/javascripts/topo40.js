@@ -7,15 +7,14 @@ Stefan Wehner (2012-2013)
 function render() {
 osmogon = new Osmogon("#map");
 osmogon.setScale(3000000);      // reduction scale
-osmogon.setLongitude(-71.65);  // center longitude
-osmogon.setLatitude(-36.84);   // center latitude
+osmogon.setLongitude(-73.9723);  // center longitude
+osmogon.setLatitude(40.6946);   // center latitude
 
 osmogon.backdrop("backdrop");
 
-var green = osmogon.osmdata('green').load({'natural': {"$in": ['scrub','wood','forest']}});
+var green = osmogon.osmdata('green').load({'leisure': {"$in": ['park']}});
 
 var water = osmogon.osmdata('water').load({'natural':'water'});
-var river = osmogon.osmdata('water').load({'waterway':{"$in": ['river','stream']}});
 
 // Register footpath as new osmdata feature. The order of features matters for the order of drawing
 // data is loaded asynchronously. The name string given to the collection is the name of the layer

@@ -3,8 +3,8 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express');
+var osmongo = require('./routes/osmongo').osmongo;
 
 var app = express();
 
@@ -33,7 +33,7 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index);
+app.get('/osm', osmongo);
 
 app.listen(app.get('port'));
 console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);

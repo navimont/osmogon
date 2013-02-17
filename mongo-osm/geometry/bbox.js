@@ -6,7 +6,7 @@
 var util = require("util");
 var assert = require("assert");
 
-var Settings = require('../util/settings').getSettings;
+var Settings = require('../../settings').getSettings;
 
 exports.BBox = BBox;
 

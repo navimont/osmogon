@@ -4,11 +4,11 @@
 * Stefan Wehner (2012)
 */
 
-var GeoJson = require("../lib/writer/geojson");
+var GeoJson = require("../mongo-osm/writer/geojson");
 var GeoJsonStream = GeoJson.GeoJsonStream;
-var Node = require('../lib/geometry/node').Node;
-var Way = require('../lib/geometry/way').Way;
-var Relation = require('../lib/geometry/relation').Relation;
+var Node = require('../mongo-osm/geometry/node').Node;
+var Way = require('../mongo-osm/geometry/way').Way;
+var Relation = require('../mongo-osm/geometry/relation').Relation;
 
 var MockLogger = {
     warning: function(warn) {
@@ -66,7 +66,7 @@ exports.streamWriteNodes = {
         this.osm.nodes = this.nodes;
         var writer = new GeoJsonStream(this.osm);
         writer.on("data", function(data) {
-            test.deepEqual(expected, JSON.parse(data));
+            test.deepEqual(expected, data);
             test.done();
         })
     }
@@ -111,7 +111,7 @@ exports.streamWriteWays = {
         this.osm.ways = this.ways;
         var writer = new GeoJsonStream(this.osm);
         writer.on("data", function(data) {
-            test.deepEqual(expected, JSON.parse(data));
+            test.deepEqual(expected, data);
             test.done();
         })
     }
@@ -158,7 +158,7 @@ exports.streamWriteRelation = {
 
         var writer = new GeoJsonStream(this.osm);
         writer.on("data", function(data) {
-            test.deepEqual(expected, JSON.parse(data));
+            test.deepEqual(expected, data);
             test.done();
         })
     }

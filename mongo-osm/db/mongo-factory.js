@@ -16,9 +16,9 @@ var OsmDb = {};
 var EarthRadius = 6378 // km
 
 
-exports.OsmComplete = function(mongo_host, mongo_port) {
+exports.MongoService = function(mongo_host, mongo_port) {
     if (!OsmDb.hasOwnProperty(mongo_host+mongo_port)) {
-        OsmDb[mongo_host+mongo_port] = new OsmComplete(mongo_host, mongo_port);
+        OsmDb[mongo_host+mongo_port] = new MongoService(mongo_host, mongo_port);
     }
     return OsmDb[mongo_host+mongo_port];
 }
@@ -30,7 +30,7 @@ exports.TestInterface = {
     tagsPrefix: tagsPrefix
 }
 
-function OsmComplete(mongo_host, mongo_port) {
+function MongoService(mongo_host, mongo_port) {
     this.host = mongo_host;
     this.port = mongo_port;
     this.collection = undefined;
@@ -48,15 +48,15 @@ function OsmComplete(mongo_host, mongo_port) {
     MongoOsm.connect(mongo_host, mongo_port, connectedCb);
 }
 
-OsmComplete.prototype.findOsm = function(tags, callback) {
-    Logger.debug("OsmComplete.findOsm", tags);
+MongoService.prototype.findOsm = function(tags, callback) {
+    Logger.debug("MongoService.findOsm", tags);
     var query = tagsPrefix(tags);
     var context = this;
     this.callWhenReady( function(collection) {find(context.collection, query, callback)} );
 }
 
-OsmComplete.prototype.findOsmNear = function(loc, distance_km, tags, callback) {
-    Logger.debug("OsmComplete.findOsmNear loc="+loc+" distance="+distance_km+"km", tags);
+MongoService.prototype.findOsmNear = function(loc, distance_km, tags, callback) {
+    Logger.debug("MongoService.findOsmNear loc="+loc+" distance="+distance_km+"km", tags);
 
     function osmGeoNear(collection, query, callback) {
         var options = {
@@ -84,16 +84,16 @@ OsmComplete.prototype.findOsmNear = function(loc, distance_km, tags, callback) {
     this.callWhenReady( function(collection) {osmGeoNear(context.collection, tagsPrefix(tags), callback)} );
 }
 
-OsmComplete.prototype.findOsmBox = function(bbox, tags, callback) {
-    Logger.debug("OsmComplete.findOsmBox bbox="+bbox, tags);
+MongoService.prototype.findOsmBox = function(bbox, tags, callback) {
+    Logger.debug("MongoService.findOsmBox bbox="+bbox, tags);
     var query = tagsPrefix(tags);
     query.loc = {$within: {$box: bbox.bbox()}};
     var context = this;
     this.callWhenReady( function(collection) {find(context.collection, query, callback)} );
 }
 
-OsmComplete.prototype.findOsmPolygon = function(polygon, tags, callback) {
-    Logger.debug("OsmComplete.findOsmPolygon polygon=", {polygon: polygon, tags: tags});
+MongoService.prototype.findOsmPolygon = function(polygon, tags, callback) {
+    Logger.debug("MongoService.findOsmPolygon polygon=", {polygon: polygon, tags: tags});
     var query = tagsPrefix(tags);
     query.loc = {$within: {$polygon: polygon}};
     var context = this;
@@ -101,7 +101,7 @@ OsmComplete.prototype.findOsmPolygon = function(polygon, tags, callback) {
 }
 
 // queue up Db calls in case DB connection is not established
-OsmComplete.prototype.callWhenReady = function(dbfind) {
+MongoService.prototype.callWhenReady = function(dbfind) {
     this.queued.push( dbfind );
     if (this.collection) {
         this.callEnqueued();
@@ -109,7 +109,7 @@ OsmComplete.prototype.callWhenReady = function(dbfind) {
 }
 
 // call enqueued DB requests
-OsmComplete.prototype.callEnqueued = function() {
+MongoService.prototype.callEnqueued = function() {
     while (this.queued.length) {
         this.queued.pop()(this.collection);
     }

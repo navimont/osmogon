@@ -4,7 +4,7 @@
  */
 
 var express = require('express');
-var osmongo = require('./routes/osmongo').osmongo;
+var osmongo = require('./mongo-osm/geojson-server').server;
 
 var app = express();
 

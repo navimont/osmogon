@@ -10,9 +10,9 @@ var Settings = {
 , "MONGO_PORT": 27017
 , "MONGO_DB": "osmogon"
 , "MONGO_DB_help": "mongo database name"
-, "LOGGER_COLLECTION_help": "log to this mongo collection instead of stdout"
-, "LOGGER_COLLECTION": "beet_log"
-, "LOGGER_COLLECTION_SIZE": 1000000
+, "LOGGER_FILE_help": "log to this file instead of stdout"
+, "LOGGER_FILE": "beet_log"
+, "LOGGER_OBJECT_DEPTH": 4
 , "LOGGER_CONSOLE_LEVEL": 0
 , "FOLLOW_MISSING_WAYS_help": "load ways outside the tile if referenced by relations"
 , "FOLLOW_MISSING_WAYS": false

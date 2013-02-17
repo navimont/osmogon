@@ -4,16 +4,16 @@
 * Stefan Wehner 2012
 */
 
-var OsmComplete = require('./access/osm-complete').OsmComplete;
-var Settings = require('./util/settings').getSettings();
+var Db = require('./db/mongo-dao');
+var Settings = require('../settings').getSettings();
 
 
-exports.OsmMongo = OsmMongo;
+exports.MongoOsm = MongoOsm;
 
-function OsmMongo(mongo_host, mongo_port) {
+function MongoOsm(mongo_host, mongo_port) {
     mongo_host = mongo_host || Settings.MONGO_HOST;
     mongo_port = mongo_port || Settings.MONGO_PORT;
-    this.osm = OsmComplete(mongo_host, mongo_port);
+    this.osm = Db.connect(mongo_host, mongo_port);
 }
 
 /*
@@ -41,7 +41,7 @@ function OsmMongo(mongo_host, mongo_port) {
 *          ensureIndex calls in mongo/mongo-connection.js for a
 *          complete list.
 */
-OsmMongo.prototype.findOsm = function(tags, callback) {
+MongoOsm.prototype.findOsm = function(tags, callback) {
     this.osm.findOsm(tags, callback);
 }
 
@@ -52,7 +52,7 @@ OsmMongo.prototype.findOsm = function(tags, callback) {
 * 'loc' is a point [lon,lat] or an array of points [[lon,lat],...]
 * 'distance' is in kilometers.
 */
-OsmMongo.prototype.findOsmNear = function(loc, distance, tags, callback) {
+MongoOsm.prototype.findOsmNear = function(loc, distance, tags, callback) {
     this.osm.findOsmNear(loc, distance, tags, callback);
 }
 
@@ -65,7 +65,7 @@ OsmMongo.prototype.findOsmNear = function(loc, distance, tags, callback) {
 *
 * WARNING: This will be slow for a large bounding box!
 */
-OsmMongo.prototype.findOsmBox = function(bbox, tags, callback) {
+MongoOsm.prototype.findOsmBox = function(bbox, tags, callback) {
     this.osm.findOsmBox(bbox, tags, callback);
 }
 
@@ -77,7 +77,7 @@ OsmMongo.prototype.findOsmBox = function(bbox, tags, callback) {
 *
 * WARNING: This will be slow for a large polygon!
 */
-OsmMongo.prototype.findOsmPolygon = function(polygon, tags, callback) {
+MongoOsm.prototype.findOsmPolygon = function(polygon, tags, callback) {
     this.osm.findOsmPolygon(polygon, tags, callback);
 }
 

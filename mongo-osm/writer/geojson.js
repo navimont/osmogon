@@ -7,7 +7,7 @@
 var Util = require("util");
 var Stream = require("stream");
 
-var Logger = require("../util/logger");
+var Logger = require("../../util/logger");
 var Geomath = require("../geometry/geomath");
 
 exports.TestInterface = {
@@ -16,9 +16,11 @@ exports.TestInterface = {
 
 function GeoJsonFeature(osm_id, tags) {
     this.feature = {"type": "Feature",
-                    "id": osm_id,
-                    "properties": tags
+                    "id": osm_id
                     };
+    if (tags) {
+        this.feature.properties = tags;
+    }
 }
 
 GeoJsonFeature.prototype.convert = function() {

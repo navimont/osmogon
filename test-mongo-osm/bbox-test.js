@@ -4,8 +4,8 @@
 * Stefan Wehner 2012
 */
 
-var BBox = require('../lib/geometry/bbox').BBox;
-var TestInterface = require('../lib/geometry/bbox').TestInterface;
+var BBox = require('../mongo-osm/geometry/bbox').BBox;
+var TestInterface = require('../mongo-osm/geometry/bbox').TestInterface;
 
 exports.makeBox = function(test) {
     var box = new BBox([1,1]);

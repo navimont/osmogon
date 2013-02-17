@@ -5,14 +5,14 @@
  *
  * Stefan Wehner 2013
  */
-var OsmMongo = require('../lib/osm-mongo').OsmMongo;
-var GeoJsonStream = require('../lib/writer/geojson.js').GeoJsonStream;
-var BBox = require('../lib/geometry/bbox').BBox;
-var Logger = require('../lib/util/logger');
+var MongoOsm = require('./mongo-osm').MongoOsm;
+var GeoJsonStream = require('./writer/geojson.js').GeoJsonStream;
+var BBox = require('./geometry/bbox').BBox;
+var Logger = require('../util/logger');
 
-var osm = new OsmMongo();
+var osm = new MongoOsm();
 
-exports.osmongo = function(req, res) {
+exports.server = function(req, res) {
   Logger.debug("Bounding box request", {querystring: req.query})
   var bbox = new BBox([[parseFloat(req.query.minlon),parseFloat(req.query.minlat)],[parseFloat(req.query.maxlon),parseFloat(req.query.maxlat)]]);
   if (!bbox.isDefined()) {

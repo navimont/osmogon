@@ -3,7 +3,7 @@
 *
 * Stefan Wehner (2012)
 */
-var Geomath = require('../lib/geometry/geomath');
+var Geomath = require('../mongo-osm/geometry/geomath');
 var Transform = Geomath.Transform;
 var Line = require('sylvester').Line;
 var Vector = require('sylvester').Vector;

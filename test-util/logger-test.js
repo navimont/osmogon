@@ -4,8 +4,8 @@
 * Stefan Wehner (2012)
 */
 
-var logger = require('../lib/util/logger');
-var Settings = require('../lib/util/settings');
+var logger = require('../util/logger');
+var Settings = require('../settings');
 
 exports.createId = function(test) {
     var timestamp = new Date();
@@ -43,6 +43,7 @@ exports.ObjectToMessageObject = function(test) {
 
 
 
+/* TODO implement file logging
 
 module.exports = {
     setUp: function (callback) {
@@ -52,9 +53,7 @@ module.exports = {
                 context.inserted = obj[0];
             }
         };
-        var dbmock = {getCollection: function() {return collection}};
-        logger.TestInterface.injectMongoOsm(dbmock);
-        Settings.setSettings({LOGGER_COLLECTION: 'mock'});
+        //Settings.setSettings({LOGGER_COLLECTION: 'mock'});
         logger.TestInterface.overrideLogToStderr(function(level,msg,obj) {context.stdout_msg = msg});
         callback();
     },
@@ -95,5 +94,5 @@ module.exports = {
     }
 }
 
-
+*/
 

@@ -4,7 +4,7 @@
 * Stefan Wehner (2012)
 */
 
-var NodeConverter = require('../lib/access/node-converter').NodeConverter;
+var NodeConverter = require('../mongo-osm/converter/node-converter').NodeConverter;
 
 exports.oneNode = function(test) {
     function callback(error, node) {

@@ -1,19 +1,17 @@
 /*
-* Write logs with timestamp to mongo or console
+* Write logs with timestamp to file or console
 *
 * Stefan Wehner (2012)
 */
 
 var util = require('util');
-var Settings = require('../util/settings').getSettings;
-var MongoOsm = require('../mongo/mongo-connect');
+var Settings = require('../settings').getSettings;
 
 var last_timestamp = undefined;
 var beyond_timstamp = 0;
 var collection = undefined;
 
 exports.TestInterface = {
-    injectMongoOsm: function(mongo) {MongoOsm = mongo},
     overrideLogToStderr: function(toStderr) {logToStderr = toStderr},
     toMessageObject: toMessageObject,
     getId: getId
@@ -55,7 +53,7 @@ var Level = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR'];
 
 logToStderr = function(level, msg, obj) {
     if (obj) {
-        console.warn("%s %s %s %s", new Date(), Level[level], msg, util.inspect(obj, false, 4, true));
+        console.warn("%s %s %s %s", new Date(), Level[level], msg, util.inspect(obj, false, Settings().LOGGER_OBJECT_DEPTH, true));
     } else {
         console.warn("%s %s %s", new Date(), Level[level], msg);
     }
@@ -63,17 +61,12 @@ logToStderr = function(level, msg, obj) {
 
 var LogBuffer = [];
 
-// log to mongo collection (if defined)
+// log to file (if defined)
 // log to stderr (if level > configured level)
 function write(level, msg, obj) {
-    if (Settings().LOGGER_COLLECTION) {
-        // buffer logs in case that DB is not yet open
-        LogBuffer.push(toMessageObject(level, msg, obj));
-        try {
-            var collection = MongoOsm.getCollection(Settings().LOGGER_COLLECTION);
-            collection.insert(LogBuffer, {safe: false});
-            LogBuffer = [];
-        } catch (e) {}
+    if (Settings().LOGGER_FILE) {
+        // TODO implement file logger
+        throw "Logging to file currently not supported";
     }
     var user_level = Settings().LOGGER_CONSOLE_LEVEL == undefined ? 3 : Settings().LOGGER_CONSOLE_LEVEL;
     if (level >= user_level) {

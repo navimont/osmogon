@@ -7,7 +7,7 @@
 var Mongojs = require('mongodb');
 var assert = require('assert');
 
-var Settings = require('../util/settings').getSettings();
+var Settings = require('../../settings').getSettings();
 
 // DB connection
 var DB = undefined;

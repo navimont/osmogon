@@ -8,11 +8,11 @@ var util = require("util");
 var events = require("events");
 var Mongojs = require('mongodb');
 
-var BBox = require('../lib/geometry/bbox').BBox;
-var Node = require('../lib/geometry/node').Node;
-var Way = require('../lib/geometry/way').Way;
-var Relation = require("../lib/geometry/relation").Relation;
-var RelationDb = require('../lib/mongo/relation-mongo');
+var BBox = require('../mongo-osm/geometry/bbox').BBox;
+var Node = require('../mongo-osm/geometry/node').Node;
+var Way = require('../mongo-osm/geometry/way').Way;
+var Relation = require("../mongo-osm/geometry/relation").Relation;
+var RelationDb = require('../mongo-osm/dbtypes/relation-mongo');
 
 // mock temp node storage
 var TmpNodes = {}

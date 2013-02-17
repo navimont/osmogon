@@ -7,9 +7,9 @@
 var util = require("util");
 var events = require("events");
 
-var BBox = require('../lib/geometry/bbox').BBox;
-var Way = require('../lib/geometry/way').Way;
-var WayDb = require('../lib/mongo/way-mongo');
+var BBox = require('../mongo-osm/geometry/bbox').BBox;
+var Way = require('../mongo-osm/geometry/way').Way;
+var WayDb = require('../mongo-osm/dbtypes/way-mongo');
 
 // mock temp node storage
 var Nodes;

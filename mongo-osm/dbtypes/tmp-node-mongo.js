@@ -4,8 +4,8 @@
 * Stefan Wehner (2012)
 */
 
-var DB = require("../mongo/mongo-connect");
-var Settings = require('../util/settings').getSettings;
+var DB = require("../db/mongo-factory");
+var Settings = require('../../settings').getSettings;
 
 var Node = require("../geometry/node").Node;
 

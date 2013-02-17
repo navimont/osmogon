@@ -5,7 +5,7 @@
 */
 
 var assert = require('assert');
-var PolygonUtils = require('../lib/geometry/polygon-utils');
+var PolygonUtils = require('../mongo-osm/geometry/polygon-utils');
 
 exports.test_empty_segment = function(test) {
     var s1 = [[]];

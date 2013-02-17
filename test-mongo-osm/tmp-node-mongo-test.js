@@ -4,8 +4,8 @@
 * Stefan Wehner 2012
 */
 
-var Node = require('../lib/mongo/node-mongo').Node;
-var TmpNodeDb = require('../lib/mongo/tmp-node-mongo');
+var Node = require('../mongo-osm/dbtypes/node-mongo').Node;
+var TmpNodeDb = require('../mongo-osm/dbtypes/tmp-node-mongo');
 
 var Nodes = {};
 

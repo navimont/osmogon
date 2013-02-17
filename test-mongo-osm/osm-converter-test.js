@@ -6,7 +6,7 @@
 
 var util = require("util");
 
-var OsmConverter = require('../lib/access/osm-converter');
+var OsmConverter = require('../mongo-osm/converter/osm-converter');
 
 var Collection = {
     find: function() {

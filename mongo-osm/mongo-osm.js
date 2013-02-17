@@ -4,16 +4,21 @@
 * Stefan Wehner 2012
 */
 
-var Db = require('./db/mongo-dao');
+var Dao = require('./db/mongo-dao').MongoDao;
 var Settings = require('../settings').getSettings();
 
 
 exports.MongoOsm = MongoOsm;
 
+
+/**
+ * Call constructor with mongo host and port
+ * or leave empty for default settings.
+ */
 function MongoOsm(mongo_host, mongo_port) {
     mongo_host = mongo_host || Settings.MONGO_HOST;
     mongo_port = mongo_port || Settings.MONGO_PORT;
-    this.osm = Db.connect(mongo_host, mongo_port);
+    this.osm = Dao(mongo_host, mongo_port);
 }
 
 /*

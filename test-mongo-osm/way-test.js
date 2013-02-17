@@ -3,9 +3,9 @@
 * Stefan Wehner 2012
 */
 
-var Way = require('../lib/geometry/way').Way;
-var Node = require('../lib/geometry/node').Node;
-var BBox = require("../lib/geometry/bbox").BBox;
+var Way = require('../mongo-osm/geometry/way').Way;
+var Node = require('../mongo-osm/geometry/node').Node;
+var BBox = require("../mongo-osm/geometry/bbox").BBox;
 
 exports.waySegments = {
     setUp: function (callback) {

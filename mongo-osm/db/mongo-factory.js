@@ -1,142 +1,113 @@
 /**
-* Create singleton instance per osm database.
+* Handle mongo db operations
 *
 * Stefan Wehner 2012
 */
 
 var Mongojs = require('mongodb');
+var assert = require('assert');
 
-var MongoOsm = require('../mongo/mongo-connect');
-var Logger = require('../util/logger');
-var Settings = require('../util/settings').getSettings();
-var OsmConverter = require('./osm-converter');
+var Settings = require('../../settings').getSettings();
 
-var OsmDb = {};
+// DB connection
+var DB = undefined;
 
-var EarthRadius = 6378 // km
+// keep a pool of collections
+var availableCollections = {};
 
+// Connect to database and the predefind collections (in collections Array)
+exports.connect = function(host, port, callback) {
+    var outstanding_collections = 0;
 
-exports.MongoService = function(mongo_host, mongo_port) {
-    if (!OsmDb.hasOwnProperty(mongo_host+mongo_port)) {
-        OsmDb[mongo_host+mongo_port] = new MongoService(mongo_host, mongo_port);
+    function waitForCollections() {
+        if (outstanding_collections == 0) {
+            callback();
+        } else {
+            setTimeout(waitForCollections,30);
+        }
     }
-    return OsmDb[mongo_host+mongo_port];
-}
 
-exports.TestInterface = {
-    injectMongoDb: function(mock) {MongoOsm = mock;},
-    injectLogger: function(mock) {Logger = mock;},
-    injectOsmConverter: function(mock) {OsmConverter = mock;},
-    tagsPrefix: tagsPrefix
-}
-
-function MongoService(mongo_host, mongo_port) {
-    this.host = mongo_host;
-    this.port = mongo_port;
-    this.collection = undefined;
-    this.queued = [];
-    var context = this;
-
-    function connectedCb(error) {
+    db = new Mongojs.Db('osm', new Mongojs.Server(host, port, {auto_reconnect: true}, {}));
+    db.open(function(error, db) {
         if (error) {
-            throw new Error("Could not connect to Mongo: "+error);
+            throw new Error("Can't connect to MongoDB. Is mongod running?\n"+error);
         }
-        context.collection = MongoOsm.getCollection(Settings.OSM_COLLECTION);
-        context.callEnqueued(context.collection);
-    }
-
-    MongoOsm.connect(mongo_host, mongo_port, connectedCb);
-}
-
-MongoService.prototype.findOsm = function(tags, callback) {
-    Logger.debug("MongoService.findOsm", tags);
-    var query = tagsPrefix(tags);
-    var context = this;
-    this.callWhenReady( function(collection) {find(context.collection, query, callback)} );
-}
-
-MongoService.prototype.findOsmNear = function(loc, distance_km, tags, callback) {
-    Logger.debug("MongoService.findOsmNear loc="+loc+" distance="+distance_km+"km", tags);
-
-    function osmGeoNear(collection, query, callback) {
-        var options = {
-            query: query,
-            spherical: true,
-            maxDistance: distance_km / EarthRadius,
-            uniqueDocs: true
+        DB = db;
+        console.log("Opened MongoDb on "+host+":"+port);
+        if (Settings.LOGGER_COLLECTION) {
+            outstanding_collections++;
+            db.collectionNames(Settings.LOGGER_COLLECTION, function(err, items) {
+                assert.equal(null, err);
+                if (items.length == 0) {
+                    // create capped collection
+                    db.createCollection(Settings.LOGGER_COLLECTION, {capped: true, size: Settings.LOGGER_COLLECTION_SIZE, safe:true}, function(err, collection) {
+                        assert.equal(null, err);
+                        availableCollections[Settings.LOGGER_COLLECTION] = collection;
+                        outstanding_collections--;
+                    })
+                } else {
+                    db.collection(Settings.LOGGER_COLLECTION, function(error, collection) {
+                        assert.equal(null,error);
+                        availableCollections[Settings.LOGGER_COLLECTION] = collection;
+                        outstanding_collections--;
+                    })
+                }
+            })
         }
-        Logger.info("geoNear options: ", options);
-        collection.geoNear(loc[0], loc[1], options, function(error, result) {
-            if (error) {
-                callback("Failed to execute query <"+query+"> Error: "+error);
-                return;
-            }
-            Logger.trace("geoNear returns: ", result);
-            var osm = [];
-            result.results.forEach(function(res) {
-                osm.push(res.obj);
-            });
-            OsmConverter.convertToOsm(collection, osm, callback);
-        });
-    }
-
-    var context = this;
-    this.callWhenReady( function(collection) {osmGeoNear(context.collection, tagsPrefix(tags), callback)} );
-}
-
-MongoService.prototype.findOsmBox = function(bbox, tags, callback) {
-    Logger.debug("MongoService.findOsmBox bbox="+bbox, tags);
-    var query = tagsPrefix(tags);
-    query.loc = {$within: {$box: bbox.bbox()}};
-    var context = this;
-    this.callWhenReady( function(collection) {find(context.collection, query, callback)} );
-}
-
-MongoService.prototype.findOsmPolygon = function(polygon, tags, callback) {
-    Logger.debug("MongoService.findOsmPolygon polygon=", {polygon: polygon, tags: tags});
-    var query = tagsPrefix(tags);
-    query.loc = {$within: {$polygon: polygon}};
-    var context = this;
-    this.callWhenReady( function(collection) {find(context.collection, query, callback)} );
-}
-
-// queue up Db calls in case DB connection is not established
-MongoService.prototype.callWhenReady = function(dbfind) {
-    this.queued.push( dbfind );
-    if (this.collection) {
-        this.callEnqueued();
-    }
-}
-
-// call enqueued DB requests
-MongoService.prototype.callEnqueued = function() {
-    while (this.queued.length) {
-        this.queued.pop()(this.collection);
-    }
-}
-
-
-function find(collection, query, callback) {
-    Logger.info("Executing query: ", query);
-    collection.find(query).toArray(function(error, result) {
-        if (error) {
-            callback("Failed to execute query <"+query+"> Error: "+error);
-            return;
+        if (Settings.OSM_COLLECTION) {
+            outstanding_collections++;
+            db.collection(Settings.OSM_COLLECTION, function(error, collection) {
+                assert.equal(null,error);
+                availableCollections[Settings.OSM_COLLECTION] = collection;
+                collection.ensureIndex({'loc': "2d"});
+                collection.ensureIndex({'_id.osm': 1});
+                collection.ensureIndex({'rel.id': 1});
+                // indexes for the most common osm keys
+                collection.ensureIndex({'tags.name': 1});
+                collection.ensureIndex({'tags.highway': 1});
+                collection.ensureIndex({'tags.ref': 1});
+                collection.ensureIndex({'tags.waterway': 1});
+                collection.ensureIndex({'tags.railway': 1});
+                collection.ensureIndex({'tags.public_transport': 1});
+                collection.ensureIndex({'tags.amenity': 1});
+                collection.ensureIndex({'tags.leisure': 1});
+                collection.ensureIndex({'tags.tourism': 1});
+                collection.ensureIndex({'tags.building': 1});
+                collection.ensureIndex({'tags.service': 1});
+                collection.ensureIndex({'tags.natural': 1});
+                collection.ensureIndex({'tags.landuse': 1});
+                collection.ensureIndex({'tags.boundary': 1});
+                outstanding_collections--;
+            })
         }
-        OsmConverter.convertToOsm(collection, result, callback);
+        if (Settings.TILES_COLLECTION) {
+            outstanding_collections++;
+            db.collection(Settings.TILES_COLLECTION, function(error, collection) {
+                assert.equal(null,error);
+                availableCollections[Settings.TILES_COLLECTION] = collection;
+                collection.ensureIndex({'_id.loc': "2d", 'data_timestamp': -1});
+                outstanding_collections--;
+            })
+        }
+        // temporary collection for nodes
+        outstanding_collections++;
+        var node_tmp_collection = Settings.NODE_TMP_COLLECTION || 'tmp_nodes';
+        db.collection(node_tmp_collection, function(error, collection) {
+            assert.equal(null,error);
+            availableCollections[node_tmp_collection] = collection;
+            outstanding_collections--;
+        })
+        process.nextTick(waitForCollections);
     });
 }
 
-
-// prefix property names with 'tags.' as so they are named in the DB
-function tagsPrefix(user_query) {
-    var query = {};
-    for (var tag in user_query) {
-        if (tag.slice(0,1) != '$') {
-            query["tags."+tag] = user_query[tag];
-        } else {
-            query[tag] =  user_query[tag];
-        }
-    };
-    return query;
+exports.getCollection = function(coll) {
+    if (!DB) {
+        throw new Error("No database connection.");
+    }
+    if (!availableCollections[coll]) {
+        throw new Error("Unknown collection "+coll+" Use: "+function(){var res=""; for (coll in availableCollections) res+=coll+", "; return res}());
+    }
+    return availableCollections[coll];
 }
+

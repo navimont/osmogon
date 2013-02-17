@@ -5,9 +5,9 @@
 */
 var assert = require("assert");
 
-var DB = require("../mongo/mongo-connect");
-var Nodes = require("../mongo/tmp-node-mongo");
-var logger = require("../util/logger");
+var DB = require("../db/mongo-factory");
+var Nodes = require("./tmp-node-mongo");
+var logger = require("../../util/logger");
 
 var Way = require("../geometry/way").Way;
 

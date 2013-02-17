@@ -11,7 +11,7 @@ var Settings = {
 , "MONGO_DB": "osmogon"
 , "MONGO_DB_help": "mongo database name"
 , "LOGGER_FILE_help": "log to this file instead of stdout"
-, "LOGGER_FILE": "beet_log"
+, "LOGGER_FILE": undefined
 , "LOGGER_OBJECT_DEPTH": 4
 , "LOGGER_CONSOLE_LEVEL": 0
 , "FOLLOW_MISSING_WAYS_help": "load ways outside the tile if referenced by relations"

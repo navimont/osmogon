@@ -6,7 +6,7 @@
 
 var Mongojs = require('mongodb');
 
-var DB = require("../mongo/mongo-connect");
+var DB = require("../db/mongo-factory");
 
 var BBox = require("../geometry/bbox").BBox;
 var Way = require("../geometry/way").Way;

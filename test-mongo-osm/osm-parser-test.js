@@ -5,11 +5,11 @@
 var util = require("util");
 var events = require("events");
 
-var BBox = require('../lib/geometry/bbox').BBox;
-var OsmParser = require('../lib/parser/osm-parser').OsmParser;
-var TestInterface = require('../lib/parser/osm-parser').TestInterface;
+var BBox = require('../mongo-osm/geometry/bbox').BBox;
+var OsmParser = require('../mongo-osm/parser/osm-parser').OsmParser;
+var TestInterface = require('../mongo-osm/parser/osm-parser').TestInterface;
 
-var Node = require("../lib/mongo/node-mongo").Node;
+var Node = require("../mongo-osm/dbtypes/node-mongo").Node;
 
 
 function MyStream() {

@@ -8,9 +8,9 @@ var Node = require('../geometry/node').Node;
 var Way = require('../geometry/way').Way;
 var Relation = require('../geometry/relation').Relation;
 
-var NodeConverter = require('../access/node-converter').NodeConverter;
-var WayConverter = require('../access/way-converter').WayConverter;
-var RelationConverter = require('../access/relation-converter').RelationConverter;
+var NodeConverter = require('./node-converter').NodeConverter;
+var WayConverter = require('./way-converter').WayConverter;
+var RelationConverter = require('./relation-converter').RelationConverter;
 
 exports.convertToOsm = function(collection, result, callback) {
     var dedup = {};

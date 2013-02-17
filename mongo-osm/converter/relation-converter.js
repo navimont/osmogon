@@ -8,8 +8,8 @@ var Node = require('../geometry/node').Node;
 var Way = require('../geometry/way').Way;
 var Relation = require('../geometry/relation').Relation;
 
-var NodeConverter = require('../access/node-converter').NodeConverter;
-var WayConverter = require('../access/way-converter').WayConverter;
+var NodeConverter = require('./node-converter').NodeConverter;
+var WayConverter = require('./way-converter').WayConverter;
 
 var reduceMembers = require('../geometry/polygon-utils').reduceMembers;
 

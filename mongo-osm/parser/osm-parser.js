@@ -13,11 +13,11 @@ var Mongojs = require('mongodb');
 
 var BBox = require("../geometry/bbox").BBox;
 var Way = require("../geometry/way").Way;
-var logger = require("../util/logger");
-var RelationDB = require("../mongo/relation-mongo");
-var WayDB = require("../mongo/way-mongo");
-var Node = require("../mongo/node-mongo").Node;
-var NodeTmpDB = require("../mongo/tmp-node-mongo");
+var logger = require("../../util/logger");
+var RelationDB = require("../dbtypes/relation-mongo");
+var WayDB = require("../dbtypes/way-mongo");
+var Node = require("../dbtypes/node-mongo").Node;
+var NodeTmpDB = require("../dbtypes/tmp-node-mongo");
 
 var Relation = require("../geometry/relation").Relation;
 

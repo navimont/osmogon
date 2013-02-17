@@ -7,11 +7,11 @@
 var Mongojs = require('mongodb');
 var assert = require('assert');
 
-var DB = require("../mongo/mongo-connect");
+var DB = require("../db/mongo-factory");
 
 var Way = require("../geometry/way").Way;
 var Relation = require("../geometry/relation").Relation;
-var NodeTmpDB = require("../mongo/tmp-node-mongo");
+var NodeTmpDB = require("../dbtypes/tmp-node-mongo");
 
 exports.TestInterface = {
     injectTmpNodesDB: function(mock) {NodeTmpDB = mock;},

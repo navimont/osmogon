@@ -4,7 +4,7 @@
 * Stefan Wehner (2012)
 */
 
-var WayConverter = require('../lib/access/way-converter').WayConverter;
+var WayConverter = require('../mongo-osm/converter/way-converter').WayConverter;
 
 exports.way = function(test) {
     var collection = {

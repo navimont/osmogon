@@ -6,8 +6,8 @@
 
 var util = require("util");
 
-var OsmComplete = require('../lib/access/osm-complete').OsmComplete;
-var TestInterface = require('../lib/access/osm-complete').TestInterface;
+var MongoDao = require('../mongo-osm/db/mongo-dao').MongoDao;
+var TestInterface = require('../mongo-osm/db/mongo-dao').TestInterface;
 
 var Collection = {
     toArray: function(callback) {
@@ -31,16 +31,16 @@ exports.osmAccess = {
     setUp: function(callback) {
         TestInterface.injectMongoDb(MongoMock);
         TestInterface.injectLogger({debug: function(){},info: function(){},trace: function(){}});
-        this.osm = OsmComplete('osm.osmogon.org', 27017);
+        this.osm = MongoDao('osm.osmogon.org', 27017);
         callback();
     },
     sameInstanceForSameDb: function(test) {
-        var anotherConnection = OsmComplete('osm.osmogon.org', 27017);
+        var anotherConnection = MongoDao('osm.osmogon.org', 27017);
         test.equals(true, this.osm === anotherConnection);
         test.done();
     },
     newInstanceForNewDb: function(test) {
-        var anotherConnection = OsmComplete('osm.osmogon.org', 99999);
+        var anotherConnection = MongoDao('osm.osmogon.org', 99999);
         test.equals(false, this.osm === anotherConnection);
         test.done();
     },
@@ -58,7 +58,7 @@ exports.osmAccess = {
         }
         TestInterface.injectOsmConverter(osmConverter);
 
-        var thirdConnection = OsmComplete('osm2', 333);
+        var thirdConnection = MongoDao('osm2', 333);
         thirdConnection.findOsm({highway: 'footpath'}, result);
         // verify find is enqueued
         test.equal('function', typeof thirdConnection.queued[0]);

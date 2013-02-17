@@ -4,13 +4,13 @@
 * Stefan Wehner (2012)
 */
 
-var Node = require('../lib/geometry/node').Node;
-var Way = require('../lib/geometry/way').Way;
-var Relation = require('../lib/geometry/relation').Relation;
+var Node = require('../mongo-osm/geometry/node').Node;
+var Way = require('../mongo-osm/geometry/way').Way;
+var Relation = require('../mongo-osm/geometry/relation').Relation;
 
-var RelationConverter = require('../lib/access/relation-converter').RelationConverter;
+var RelationConverter = require('../mongo-osm/converter/relation-converter').RelationConverter;
 
-var Logger = require('../lib/util/logger').Logger;
+var Logger = require('../util/logger').Logger;
 
 exports.relationWithNothing = function(test) {
     var collection = {

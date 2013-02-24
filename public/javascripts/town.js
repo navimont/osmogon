@@ -14,7 +14,6 @@ osmogon.backdrop("backdrop");
 
 var green = osmogon.osmdata('green').load({'leisure': {"$in": ['park']}});
 
-var river = osmogon.osmdata('water').load({'river':'stream'});
 var water = osmogon.osmdata('water').load({'natural':'water'});
 
 // Register footpath as new osmdata feature. The order of features matters for the order of drawing
@@ -49,8 +48,6 @@ footpath
           return {"class": "path"};
       }
 });
-
-river.draw(function(){return {"style": "stroke-width: 1.5px; stroke: blue; fill: none;"}});
 
 road.draw(function() {
     return {"style": "stroke-width: 3.5px; stroke: black; fill: none;"};

@@ -9,9 +9,13 @@ Stefan Wehner (2012)
 // instantiate class and give DOM element where the map attaches to as parameter
 function Osmogon(element) {
     this.root_element = element;
-    var relem = document.getElementById(element);
-    this.width = relem && relem.width() ? relem.width() : 600;
-    this.height = relem && relem.height() ? relem.height() : 800;
+    var relem = document.getElementById(element.replace("#",""));
+    this.width = relem ? relem.offsetWidth : window.innerWidth;
+    if (relem && relem.offsetHeight) {
+        this.height = relem.offsetHeight;
+    } else {
+        this.height = window.innerHeight;
+    }
     this.lon = -36.8;
     this.lat = -71.6;
     this.scale = 10500;    // pixel per degree (with 96dpi)
@@ -21,6 +25,8 @@ function Osmogon(element) {
     this.layers = [];
     this.osm = [];         // downloaded Osmdata
 };
+
+
 
 Osmogon.help = {help: "d3 wrapper for drawing OSM maps"};
 Osmogon.prototype.setWidth = function(w) {
@@ -146,7 +152,7 @@ Osmdata.prototype.load = function(query) {
     if (!viewport) {
         throw "Could not get viewport from osmogon";
     }
-    var locator = "/osm?minlon="+viewport[0][0]+"&minlat="+viewport[0][1]+"&maxlon="+viewport[1][0]+"&maxlat="viewport[1][1]
+    var locator = "/osm?minlon="+viewport[0][0]+"&minlat="+viewport[0][1]+"&maxlon="+viewport[1][0]+"&maxlat="+viewport[1][1];
     this.loadRequest(locator,query);
     return this;
 }

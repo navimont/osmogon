@@ -5,6 +5,7 @@
 
 var express = require('express');
 var osmongo = require('./mongo-osm/geojson-server').server;
+var map = require('./routes/map').map;
 
 var app = express();
 
@@ -31,9 +32,11 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Routes
-
+// serve osm data requests
 app.get('/osm', osmongo);
+// serve map editor page
+app.get('/', map);
+
 
 app.listen(app.get('port'));
 console.log("Express server listening on port %d in %s mode", app.get('port'), app.settings.env);

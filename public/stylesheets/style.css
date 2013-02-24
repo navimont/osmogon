@@ -5,3 +5,13 @@ body {
 a {
   color: #00b7ff;
 }
+#crosshair {
+  position: fixed;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  margin: -100px 0 0 -100px;
+  width: 200px;
+  height: 200px;
+}
+
